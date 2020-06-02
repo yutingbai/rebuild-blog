@@ -24,24 +24,17 @@
                     </a>
                   </div>
                 </li>
-                <li>
+                <li @click="displayDialog('follow',userId)">
                   <div class="meta-block">
-                    <a href="/#">
+                    <a>
                       <p>{{user.follow}}</p>关注 >
                     </a>
                   </div>
                 </li>
-                <li>
+                <li @click="displayDialog('fans',userId)">
                   <div class="meta-block">
-                    <a href="#">
+                    <a>
                       <p>{{user.fans}}</p>粉丝 >
-                    </a>
-                  </div>
-                </li>
-                <li>
-                  <div class="meta-block">
-                    <a href="/#">
-                      <p>1</p>文章 >
                     </a>
                   </div>
                 </li>
@@ -52,8 +45,24 @@
       </div>
     </div>
     <div id="content">
-        <router-view v-if="isRouterAlive"/>
+      <router-view v-if="isRouterAlive" />
     </div>
+    <el-dialog class="dialog" :visible.sync="dialogVisible" width="30%">
+      <div v-for="item in diaCount" :key="item.id" class="author" style="cursor: pointer;">
+        <div class="avatar">
+          <img :src="item.avatarUrl" alt="180" />
+        </div>
+        <div class="info">
+          <a class="nickname">{{item.nickname}}</a>
+        </div>
+        <div class="info">
+          <a class="nickname">{{item.major}}-{{item.grade}}</a>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -67,20 +76,22 @@ export default {
   components: {},
   provide: function() {
     return {
-      userPagereload: this.userPagereload,
+      userPagereload: this.userPagereload
     };
   },
   data() {
     return {
       user: {},
-      isRouterAlive: true
+      isRouterAlive: true,
+      diaCount: "",
+      dialogVisible: false
     };
   },
   mounted() {
-    this.getUserInfo()
+    this.getUserInfo();
   },
   computed: {
-    ...mapGetters(["userName", "userId", "userHead"]),
+    ...mapGetters(["userName", "userId", "userHead"])
   },
   methods: {
     userPagereload: function() {
@@ -93,6 +104,12 @@ export default {
     getUserInfo() {
       API.GetUserInfo(this.userId).then(res => {
         this.user = res;
+      });
+    },
+    displayDialog(type, id) {
+      API.fans(type, { id: id }).then(res => {
+        this.diaCount = res.content;
+        this.dialogVisible = true;
       });
     }
   },
@@ -224,5 +241,53 @@ div.router-link-active path {
 }
 .userCenter {
   position: relative;
+}
+.dialog {
+  .info{
+    display: inline-block;
+    padding-left:50px;
+  }
+  .author{
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .avatar {
+    float: left;
+    -webkit-tap-highlight-color: transparent;
+    font-family: -apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB,
+      Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+    list-style: none;
+    line-height: 20px;
+    font-size: 13px;
+    box-sizing: border-box;
+    background-color: transparent;
+    text-decoration: none;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    color: #333;
+    margin: 0 5px 0 0;
+    display: inline-block;
+    vertical-align: middle;
+    img {
+      margin-top: -5px;
+      margin-right: 3px;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, SF UI Text, Arial, PingFang SC,
+        Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+      list-style: none;
+      line-height: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #333;
+      box-sizing: border-box;
+      vertical-align: middle;
+      width: 100%;
+      height: 100%;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+    }
+  }
 }
 </style>

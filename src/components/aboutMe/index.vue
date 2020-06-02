@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <div class="wordList">
       <el-row>
         <el-col :span="3">
@@ -93,81 +93,88 @@
         </el-col>
       </el-row>
     </div>
-    <div class="content">
+    <div v-if="content.toString()!='' && content[0].board" class="content">
       <ul
-      class="cardList infinite-list"
-      overflow="scroll"
-      @scroll="listenScroll($event)"
-      v-loading="loading"
-    >
-      <!-- v-infinite-scroll="load" :infinite-scroll-delay="1000" -->
-      <li v-for="item  in content" :key="item.id" class="card infinite-list-item">
-        <div class="content">
-          <div class="author" style="cursor: pointer;">
-            <a class="avatar" @click="pushRoute(item.id)">
-              <img :src="item.userVO.avatarUrl" alt="180" />
-            </a>
-            <div class="info">
-              <a class="nickname" @click="pushRoute(item.id)">{{item.userVO.nickname}}</a>
-              <span
-                data-type="share_note"
-                data-datetime="2017-12-18T10:27:40+08:00"
-              >{{new Date(item.lastActiveAt).toLocaleString()}}</span>
+        class="cardList infinite-list"
+        overflow="scroll"
+        @scroll="listenScroll($event)"
+        v-loading="loading"
+      >
+        <!-- v-infinite-scroll="load" :infinite-scroll-delay="1000" -->
+        <li v-for="item  in content" :key="item.id" class="card infinite-list-item">
+          <div class="content">
+            <div class="author" style="cursor: pointer;">
+              <a class="avatar" @click="pushRoute(item.id)">
+                <img :src="item.userVO.avatarUrl" alt="180" />
+              </a>
+              <div class="info">
+                <a class="nickname" @click="pushRoute(item.id)">{{item.userVO.nickname}}</a>
+                <span
+                  data-type="share_note"
+                  data-datetime="2017-12-18T10:27:40+08:00"
+                >{{timestampToTime(item.lastActiveAt)}}</span>
+              </div>
+            </div>
+
+            <a class="title" @click="pushRoute(item.id)">{{item.title}}</a>
+            <p
+              style="cursor: pointer;"
+              @click="pushRoute(item.id)"
+              class="abstract"
+            >{{regpassage(item.content)}}</p>
+            <div class="meta">
+              <a @click="pushRoute(item.id)">
+                <svg
+                  t="1591034383019"
+                  class="icon"
+                  viewBox="0 0 1024 1024"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  p-id="1747"
+                  width="200"
+                  height="200"
+                >
+                  <path
+                    d="M646.4 272c-59.2 0-108.8 33.6-134.4 81.6-25.6-48-76.8-81.6-134.4-81.6-84.8 0-153.6 68.8-153.6 155.2 0 25.6 6.4 51.2 17.6 72 1.6 3.2 6.4 9.6 12.8 19.2 4.8 6.4 9.6 12.8 16 17.6 44.8 51.2 132.8 139.2 190.4 193.6 28.8 27.2 76.8 27.2 105.6 0 57.6-56 145.6-144 190.4-193.6 4.8-4.8 11.2-11.2 16-17.6 4.8-6.4 9.6-14.4 12.8-19.2 11.2-22.4 17.6-48 17.6-72-3.2-86.4-72-155.2-156.8-155.2z"
+                    p-id="1748"
+                    :fill="item.isLike ? '#ea6f5a' : '#646464'"
+                  />
+                </svg>
+                {{item.likeCount}}
+              </a>
+              <a @click="pushRoute(item.id)">
+                <svg
+                  t="1569135820525"
+                  class="icon"
+                  viewBox="0 0 1024 1024"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  p-id="978"
+                  width="200"
+                  height="200"
+                >
+                  <path
+                    d="M726.277689 227.555556l-91.886933 138.899911L539.420444 227.555556 726.277689 227.555556zM619.793067 398.222222 415.9488 398.222222l101.910756 387.629511L619.793067 398.222222zM422.752711 375.466667l190.225067 0-95.118222-139.127467L422.752711 375.466667zM401.351111 366.455467 496.310044 227.555556 309.464178 227.555556 401.351111 366.455467zM496.264533 793.156267 392.430933 398.222222 168.721067 398.222222 496.264533 793.156267zM169.039644 375.466667l210.989511 0-91.909689-138.934044L169.039644 375.466667zM747.463111 236.782933 655.712711 375.466667l210.625422 0L747.463111 236.782933zM643.310933 398.222222l-103.844978 394.899911L866.656711 398.222222 643.310933 398.222222z"
+                    p-id="979"
+                    fill="#ea6f5a"
+                  />
+                </svg>
+                {{item.looked}}
+              </a>
+              <span @click="pushRoute(item.id)">
+                <i class="el-icon-chat-dot-round"></i> 0
+              </span>
             </div>
           </div>
-
-          <a class="title" @click="pushRoute(item.id)">{{item.title}}</a>
-          <p style="cursor: pointer;" @click="pushRoute(item.id)" class="abstract">{{regpassage(item.content)}}</p>
-          <div class="meta">
-            <a @click="pushRoute(item.id)">
-              <svg
-                t="1591034383019"
-                class="icon"
-                viewBox="0 0 1024 1024"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                p-id="1747"
-                width="200"
-                height="200"
-              >
-                <path
-                  d="M646.4 272c-59.2 0-108.8 33.6-134.4 81.6-25.6-48-76.8-81.6-134.4-81.6-84.8 0-153.6 68.8-153.6 155.2 0 25.6 6.4 51.2 17.6 72 1.6 3.2 6.4 9.6 12.8 19.2 4.8 6.4 9.6 12.8 16 17.6 44.8 51.2 132.8 139.2 190.4 193.6 28.8 27.2 76.8 27.2 105.6 0 57.6-56 145.6-144 190.4-193.6 4.8-4.8 11.2-11.2 16-17.6 4.8-6.4 9.6-14.4 12.8-19.2 11.2-22.4 17.6-48 17.6-72-3.2-86.4-72-155.2-156.8-155.2z"
-                  p-id="1748"
-                  :fill="item.isLike ? '#ea6f5a' : '#646464'"
-                />
-              </svg>
-              {{item.likeCount}}
-            </a>
-            <a @click="pushRoute(item.id)">
-              <svg
-                t="1569135820525"
-                class="icon"
-                viewBox="0 0 1024 1024"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                p-id="978"
-                width="200"
-                height="200"
-              >
-                <path
-                  d="M726.277689 227.555556l-91.886933 138.899911L539.420444 227.555556 726.277689 227.555556zM619.793067 398.222222 415.9488 398.222222l101.910756 387.629511L619.793067 398.222222zM422.752711 375.466667l190.225067 0-95.118222-139.127467L422.752711 375.466667zM401.351111 366.455467 496.310044 227.555556 309.464178 227.555556 401.351111 366.455467zM496.264533 793.156267 392.430933 398.222222 168.721067 398.222222 496.264533 793.156267zM169.039644 375.466667l210.989511 0-91.909689-138.934044L169.039644 375.466667zM747.463111 236.782933 655.712711 375.466667l210.625422 0L747.463111 236.782933zM643.310933 398.222222l-103.844978 394.899911L866.656711 398.222222 643.310933 398.222222z"
-                  p-id="979"
-                  fill="#ea6f5a"
-                />
-              </svg>
-              {{item.looked}}
-            </a>
-            <span @click="pushRoute(item.id)">
-              <i class="el-icon-chat-dot-round"></i> 0
-            </span>
-          </div>
-        </div>
-      </li>
-      <p v-if="!last" class="last" style="text-align: center; color:#b4b4b4; font-size:20px">
-        <i class="el-icon-loading"></i>
-      </p>
-    </ul>
-      <p  v-if="content.toString() == '' && !this.loading " style="text-align: center; color:#b4b4b4 ;font-size:50px">
+        </li>
+        <p v-if="!last" class="last" style="text-align: center; color:#b4b4b4; font-size:20px">
+          <i class="el-icon-loading"></i>
+        </p>
+      </ul>
+      <p
+        v-if="content.toString() == '' && !this.loading "
+        style="text-align: center; color:#b4b4b4 ;font-size:50px"
+      >
         <svg
           t="1591069880712"
           class="icon"
@@ -186,6 +193,104 @@
         </svg>
       </p>
     </div>
+    <div v-if="content.toString()!='' && content[0].type" class="content">
+      <ul
+        class="cardList infinite-list"
+        overflow="scroll"
+        @scroll="listenScroll($event)"
+        v-loading="loading"
+      >
+        <!-- v-infinite-scroll="load" :infinite-scroll-delay="1000" -->
+        <li v-for="item  in content" :key="item.id" class="card infinite-list-item">
+          <div class="content">
+            <div class="author" style="cursor: pointer;">
+              <a class="avatar">
+                <img :src="item.userVO.avatarUrl" alt="180" />
+              </a>
+              <div class="info">
+                <a class="nickname" >{{item.userVO.nickname}}</a>
+                <span
+                  data-type="share_note"
+                  data-datetime="2017-12-18T10:27:40+08:00"
+                >{{timestampToTime(item.lastModified)}}</span>
+                <span>
+                  <el-divider direction="vertical"></el-divider>
+                  <span
+                    :class="item.beRead == 0 ?'red' :'green'"
+                    type="text"
+                  >{{item.beRead == 0 ?'未读' :'已读'}}</span>
+                </span>
+              </div>
+            </div>
+
+            <a class="title" ></a>
+            <p
+              style="cursor: pointer;"
+              class="abstract"
+            >对你发布的「{{item.summary}}」，他好像有话要说</p>
+            <div class="meta">
+              <span @click="viewMore(item.id)">
+                <i class="el-icon-chat-dot-round"></i> 点击查看详情
+              </span>
+            </div>
+          </div>
+        </li>
+        <p v-if="!last" class="last" style="text-align: center; color:#b4b4b4; font-size:20px">
+          <i class="el-icon-loading"></i>
+        </p>
+      </ul>
+      <p
+        v-if="content.toString() == '' && !this.loading "
+        style="text-align: center; color:#b4b4b4 ;font-size:50px"
+      >
+        <svg
+          t="1591069880712"
+          class="icon"
+          viewBox="0 0 1024 1024"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          p-id="2270"
+          width="200"
+          height="200"
+        >
+          <path
+            d="M880.128 426.752a98.816 98.816 0 0 0-68.608-33.792H214.528a111.36 111.36 0 0 0-70.912 32.512c-18.944 18.944-128 195.072-128 232.192v236.8a66.816 66.816 0 0 0 20.224 47.36 68.352 68.352 0 0 0 48.384 19.456h856.32a68.352 68.352 0 0 0 48.384-19.456 66.816 66.816 0 0 0 20.224-47.36v-236.8c0-37.12-129.024-230.912-129.024-230.912zM659.2 636.672a32 32 0 0 0-32.768 23.04v4.864a111.872 111.872 0 0 1-223.488 0 39.68 39.68 0 0 1 0-6.4 35.328 35.328 0 0 0-31.744-21.76H89.6l96-162.304s19.2-31.488 37.376-31.232h597.76a80.64 80.64 0 0 1 32.256 30.976L947.2 636.672zM478.976 87.04h62.208V332.8h-62.208V87.04zM673.497 296.745l111.002-137.076 48.344 39.149-111.002 137.076-48.344-39.149zM191.288 198.776l48.344-39.149 111.002 137.076-48.344 39.15-111.002-137.077z"
+            fill="#646464"
+            p-id="2271"
+          />
+        </svg>
+      </p>
+    </div>
+    <el-dialog
+      class="dialog"
+      :title="`来自的${message.userVO.nickname}消息`"
+      :visible.sync="dialogVisible"
+      width="30%"
+    >
+      <div class="author" style="cursor: pointer;">
+        <a class="avatar">
+          <img :src="message.userVO.avatarUrl" alt="180" />
+        </a>
+        <div class="info">
+          <a class="nickname">{{message.userVO.nickname}}</a>
+          <span
+            data-type="share_note"
+            data-datetime="2017-12-18T10:27:40+08:00"
+          >{{timestampToTime(message.lastModified)}}</span>
+          <span>
+            <el-divider direction="vertical"></el-divider>
+
+            <span
+              :class="message.beRead == 0 ?'red' :'green'"
+              type="text"
+            >{{message.beRead == 0 ?'未读' :'已读'}}</span>
+          </span>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -217,13 +322,21 @@ export default {
       info: {
         id: "",
         page: 1,
-        per_page: 10
+        per_page: 20
       },
       content: [],
+      aboutMeCount: [],
       totalElements: 0,
       timeout: false,
       loading: false,
-      last: false
+      last: false,
+      dialogVisible: false,
+      message: {
+        userVO: {
+          nickname: "",
+          avatarUrl: ""
+        }
+      }
     };
   },
   mounted() {
@@ -231,15 +344,14 @@ export default {
     this.getContent(this.type);
   },
   methods: {
-    pushRoute(url){
-      this.$router.push('/postDetail/'+url);
-
+    pushRoute(url) {
+      this.$router.push("/postDetail/" + url);
     },
     listenScroll(event) {
       var Loading = this.load;
       if (
         !this.timeout &&
-        event.srcElement.scrollTop - (this.totalElements - 3) * 140 > 0
+        event.srcElement.scrollTop - (this.totalElements - 3) * 83 > 0
       ) {
         this.timeout = setTimeout(function() {
           Loading();
@@ -254,16 +366,27 @@ export default {
       var params = this.info;
       this.loading = true;
       params.id = this.userId || "";
-      API.aboutMe(type, params).then(res => {
-        this.content = this.content.concat(res.content);
-        this.totalElements = res.totalElements;
-        this.timeout = null;
-        this.loading = false;
-        if(this.totalElements < 10){
-          this.last=true
-        }
-      });
-      
+      if (type == "post/myquestion") {
+        API.notification(params).then(res => {
+          this.content = this.content.concat(res.data.content);
+          this.totalElements = res.data.totalElements;
+          this.timeout = null;
+          this.loading = false;
+          if (this.totalElements < 10) {
+            this.last = true;
+          }
+        });
+      } else {
+        API.aboutMe(type, params).then(res => {
+          this.content = this.content.concat(res.content);
+          this.totalElements = res.totalElements;
+          this.timeout = null;
+          this.loading = false;
+          if (this.totalElements < 10) {
+            this.last = true;
+          }
+        });
+      }
     },
     load() {
       if (this.info.page * 10 <= this.totalElements) {
@@ -274,13 +397,35 @@ export default {
       }
     },
     regpassage(data) {
-      return data
-        .slice(0, 100)
-        .replace(
-          /[\#\* |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,
-          ""
-        )
-        .concat("...");
+      if (data) {
+        return data
+          .slice(0, 100)
+          .replace(
+            /[\#\* |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,
+            ""
+          )
+          .concat("...");
+      }
+    },
+    timestampToTime(timestamp) {
+      var date = new Date(new Date(timestamp).valueOf() + 13 * 60 * 60 * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var Y = date.getFullYear() + "-";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "-";
+      var D = date.getDate() + " ";
+      var h = date.getHours() + ":";
+      var m = date.getMinutes() + ":";
+      var s = date.getSeconds();
+      return Y + M + D + h + m + s;
+    },
+    viewMore(id) {
+      
+      API.notificationDetail(id).then(res => {
+        this.message = res;
+        this.dialogVisible = true;
+      });
     }
   }
 };
@@ -478,7 +623,6 @@ li {
   }
 }
 
-
 .wordList {
   margin-left: 2.5%;
   width: 95%;
@@ -508,5 +652,50 @@ div.router-link-active path {
 
 .userCenter {
   position: relative;
+}
+.dialog {
+  .avatar {
+    float: left;
+    -webkit-tap-highlight-color: transparent;
+    font-family: -apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB,
+      Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+    list-style: none;
+    line-height: 20px;
+    font-size: 13px;
+    box-sizing: border-box;
+    background-color: transparent;
+    text-decoration: none;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    color: #333;
+    margin: 0 5px 0 0;
+    display: inline-block;
+    vertical-align: middle;
+    img {
+      margin-top: -5px;
+      margin-right: 3px;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, SF UI Text, Arial, PingFang SC,
+        Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+      list-style: none;
+      line-height: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #333;
+      box-sizing: border-box;
+      vertical-align: middle;
+      width: 100%;
+      height: 100%;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+    }
+  }
+}
+.red {
+  color: #F56C6C;
+}
+.green {
+  color: #67C23A;
 }
 </style>

@@ -35,7 +35,14 @@
                 <el-col :span="10">
                   <div class="titleBox">{{detail.title}}</div>
                 </el-col>
-                <el-col :span="1" class="countBox" :offset="3">
+                <el-col :span="1" class="countBox" :offset="2">
+                  <a
+                    @click="pushCount('userattachment',detail.isLike,detail.userVO.id,detail.id,detail.title,userId)"
+                  >
+                    +关注
+                  </a>
+                </el-col>
+                <el-col :span="1" class="countBox" >
                   <a
                     @click="pushCount('like',detail.isLike,detail.userVO.id,detail.id,detail.title,userId)"
                   >
@@ -244,6 +251,16 @@ export default {
               this.$message.success("success");
               this.detail.isCollection = Number(!type);
               this.detail.joinCount += type == 0 ? 1 : -1;
+            } else {
+              this.$message.error("wrong" + res.errmsg);
+            }
+          });
+          break;
+          case "userattachment":
+          
+          API.userattachment({fromUserId:params.myId , toUserId:params.userId}).then(res => {
+            if (res.code == 0) {
+              this.$message.success("success");
             } else {
               this.$message.error("wrong" + res.errmsg);
             }

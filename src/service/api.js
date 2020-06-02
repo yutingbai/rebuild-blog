@@ -64,4 +64,14 @@ API.comment  = (parmas)=>{
 API.notification = (parmas) =>{
   return get('/xuptbbs/notification',parmas)
 }
+API.notificationDetail = (parmas) =>{
+  return get('/xuptbbs/notification/detail/'+parmas)
+}
+API.userattachment=(parmas) =>{
+  return post('/xuptbbs/userattachment',parmas)
+}
+API.fans = (type,parmas)=>{
+  return get('/xuptbbs/userattachment/'+type,parmas)
+  
+}
 export default API
