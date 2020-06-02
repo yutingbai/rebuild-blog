@@ -51,4 +51,17 @@ API.aboutMe = (type,parmas)=>{
 API.getPostDetail = (parmas)=>{
   return get('/xuptbbs/post/detail', parmas)
 }
+API.postLike = (parmas)=>{
+  return post('/xuptbbs/postlike', parmas)
+}
+
+API.postCollection = (parmas)=>{
+  return post('/xuptbbs/postcollection', parmas)
+}
+API.comment  = (parmas)=>{
+  return post('/xuptbbs/comment', parmas)
+}
+API.notification = (parmas) =>{
+  return get('/xuptbbs/notification',parmas)
+}
 export default API

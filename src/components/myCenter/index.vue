@@ -233,6 +233,7 @@ export default {
   methods: {
     pushRoute(url){
       this.$router.push('/postDetail/'+url);
+
     },
     listenScroll(event) {
       var Loading = this.load;
@@ -250,12 +251,10 @@ export default {
       this.userPagereload();
     },
     getContent(type) {
-      console.log('aboutme',type)
       var params = this.info;
       this.loading = true;
       params.id = this.userId || "";
-      API.notification(params).then(res => {
-        console.log(res)
+      API.aboutMe(type, params).then(res => {
         this.content = this.content.concat(res.content);
         this.totalElements = res.totalElements;
         this.timeout = null;
