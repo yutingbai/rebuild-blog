@@ -1,27 +1,8 @@
 <template>
   <div id="main">
-    <div class="userCenter">
-      <div class="wordList">
-      <el-row :gutter="20">
-        <el-col :span="2.5">
-          <router-link tag="div" to="/main/all">全部文章</router-link>
-        </el-col>
-        <el-col :span="2.5">
-          <router-link tag="div" to="/main/web">web前端</router-link>
-        </el-col>
-        <el-col :span="2.5">
-          <router-link tag="div" to="/main/java">Java后台</router-link>
-        </el-col>
-        <el-col :span="2.5">
-          <router-link tag="div" to="/main/other">其他相关</router-link>
-        </el-col>
-      </el-row>
-    </div>
-    </div>
-    <div id="content">
-      <keep-alive>
+    <div id="content" >
         <router-view />
-      </keep-alive>
+   
     </div>
   </div>
 </template>
@@ -40,10 +21,14 @@ export default {
     };
   },
   mounted() {
+    
   },
   computed: {
     ...mapGetters(["userName", "userId", "userHead"])
   },
+  methods:{
+    
+  }
  
 };
 </script>
@@ -102,9 +87,6 @@ div.router-link-active path {
   border-radius: 3px;
 }
 #content {
-  position: absolute;
-  top: 109px;
-  bottom: 0px;
   flex: 1;
   overflow: auto;
   min-width: 1013px;

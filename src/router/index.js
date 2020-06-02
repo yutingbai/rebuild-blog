@@ -10,15 +10,17 @@ const mainList = () => import('@/components/mainList')
 // 个人中心
 const User = () => import('@/views/User');
 const aboutMe = () => import('@/components/aboutMe')
-const myPost = () => import('@/components/myPost')
-const myStar = () => import('@/components/myStar')
-const myItem = () => import('@/components/myItem')
 const setting = () => import('@/views/User/setting')
 const editor = () => import('@/views/editor')
+const questionList = () => import('@/components/questionList')
+const comperateList = () => import('@/components/comperateList')
+const controllerList = () => import('@/components/controllerList')
 
 //登录注册
 const Login = () => import('@/views/LogPage/login.vue')
 const Resive = () => import('@/views/LogPage/signup.vue')
+//文章详情
+const postDetile = () => import('@/views/postDetail')
 const router = new Router({
   routes: [
     {
@@ -46,30 +48,10 @@ const router = new Router({
       redirect:'/question/all',
       children: [
         {
-          path: '/question',
-          redirect:'all'
-        },
-        {
-          path: 'all',
-          name: 'all',
-          component: aboutMe
-        },
-        {
-          path: 'java',
-          name: 'java',
-          component: myPost
-        },
-        {
-          path: 'web',
-          name: 'web',
-          component: myStar
-        },
-        {
-          path: 'other',
-          name: 'other',
-          component: myItem
+          path: ':type',
+          name: 'mainDetail',
+          component: questionList
         }
-        
       ]
     },
     {
@@ -79,65 +61,26 @@ const router = new Router({
       redirect:'/comperate/all',
       children: [
         {
-          path: '/comperate',
-          redirect:'all'
-        },
-        {
-          path: 'all',
-          name: 'all',
-          component: aboutMe
-        },
-        {
-          path: 'java',
-          name: 'java',
-          component: myPost
-        },
-        {
-          path: 'web',
-          name: 'web',
-          component: myStar
-        },
-        {
-          path: 'other',
-          name: 'other',
-          component: myItem
+          path: ':type',
+          name: 'comperateList',
+          component: comperateList
         }
-        
       ]
     },
     {
-      path: '/practice',
-      name: 'practice',
+      path: '/controller',
+      name: 'controller',
       component: Main,
-      redirect:'/practice/all',
+      redirect:'/controller/all',
       children: [
         {
-          path: '/practice',
-          redirect:'all'
-        },
-        {
-          path: 'all',
-          name: 'all',
-          component: aboutMe
-        },
-        {
-          path: 'java',
-          name: 'java',
-          component: myPost
-        },
-        {
-          path: 'web',
-          name: 'web',
-          component: myStar
-        },
-        {
-          path: 'other',
-          name: 'other',
-          component: myItem
+          path: ':type',
+          name: 'controllerList',
+          component: controllerList
         }
-        
       ]
     },
+   
     {
       path: '/users/login',
       name: 'login',
@@ -172,9 +115,6 @@ const router = new Router({
     {
       path: '/users',
       name: 'users',
-      meta: {
-        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-      },
       component: User,
       children: [
         {
@@ -182,24 +122,9 @@ const router = new Router({
           redirect: 'aboutMe'
         },
         {
-          path: 'aboutMe',
-          name: 'aboutMe',
+          path: ':type',
+          name: 'aboutme',
           component: aboutMe
-        },
-        {
-          path: 'myPost',
-          name: 'myPost',
-          component: myPost
-        },
-        {
-          path: 'myStar',
-          name: 'myStar',
-          component: myStar
-        },
-        {
-          path: 'myItem',
-          name: 'myItem',
-          component: myItem
         },
         {
           path: 'setting',
@@ -208,7 +133,12 @@ const router = new Router({
         },
         
       ]
-    }
+    },
+    {
+      path: '/postDetail/:postId',
+      name: '/postDetail',
+      component: postDetile,
+    },
 
   ]
 })

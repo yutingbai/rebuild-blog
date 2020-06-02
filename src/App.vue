@@ -70,7 +70,7 @@
                   </router-link>
                 </el-col>
                 <el-col :span="3">
-                  <router-link class="toprouter" tag="div" to="/practice">
+                  <router-link class="toprouter" tag="div" to="/controller">
                     <svg
                       t="1590923269895"
                       class="icon"

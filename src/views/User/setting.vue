@@ -1,7 +1,7 @@
 <template>
   <div class="resiveBody">
     <div class="body">
-      <router-link tag="div" to="/users" class="btn backbtn">
+      <router-link router-linktag="div" to="/users" class="btn backbtn">
         <svg
           t="1591018607486"
           class="icon"
@@ -18,7 +18,7 @@
             fill="#ea6f5a"
           />
         </svg>
-        回到个人主页
+       回到我的主页
       </router-link>
       <div class="avatarBox">
         <div class="avatar">

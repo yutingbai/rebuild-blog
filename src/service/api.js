@@ -42,5 +42,13 @@ API.postPage =(parmas) => {
 API.getBoard =(parmas) => {
   return get('/xuptbbs/post', parmas)
 }
-
+API.classification =(parmas) => {
+  return get('/xuptbbs/post/classification', parmas)
+}
+API.aboutMe = (type,parmas)=>{
+  return get('/xuptbbs/'+type, parmas)
+}
+API.getPostDetail = (parmas)=>{
+  return get('/xuptbbs/post/detail', parmas)
+}
 export default API

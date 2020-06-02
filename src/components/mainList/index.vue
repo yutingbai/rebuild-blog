@@ -1,14 +1,38 @@
 <template>
-  <div>
-    <ul class="cardList infinite-list" v-infinite-scroll="load" style="overflow:auto">
-      <li v-for="item  in content" :key="item.id" class="card infinite-list-item" >
+  <div class="content">
+    <div class="userCenter">
+      <div class="wordList">
+        <el-row :gutter="20">
+          <el-col :span="2.5">
+            <router-link tag="div" to="/main/all">全部文章</router-link>
+          </el-col>
+          <el-col :span="2.5">
+            <router-link tag="div" to="/main/web">web前端</router-link>
+          </el-col>
+          <el-col :span="2.5">
+            <router-link tag="div" to="/main/java">Java后台</router-link>
+          </el-col>
+          <el-col :span="2.5">
+            <router-link tag="div" to="/main/other">其他相关</router-link>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+    <ul
+      class="cardList infinite-list"
+      overflow="scroll"
+      @scroll="listenScroll($event)"
+      v-loading="loading"
+    >
+      <!-- v-infinite-scroll="load" :infinite-scroll-delay="1000" -->
+      <li v-for="item  in content" :key="item.id" class="card infinite-list-item">
         <div class="content">
-          <div class="author">
-            <a class="avatar" href="/#">
+          <div class="author" style="cursor: pointer;">
+            <a class="avatar" @click="pushRoute(item.id)">
               <img :src="item.userVO.avatarUrl" alt="180" />
             </a>
             <div class="info">
-              <a class="nickname" href="/u/f38fb8e3f2f0">{{item.userVO.nickname}}</a>
+              <a class="nickname" @click="pushRoute(item.id)">{{item.userVO.nickname}}</a>
               <span
                 data-type="share_note"
                 data-datetime="2017-12-18T10:27:40+08:00"
@@ -16,10 +40,10 @@
             </div>
           </div>
 
-          <a class="title" href="/#">{{item.title}}</a>
-          <p class="abstract">{{regpassage(item.content)}}</p>
+          <a class="title" @click="pushRoute(item.id)">{{item.title}}</a>
+          <p style="cursor: pointer;" @click="pushRoute(item.id)" class="abstract">{{regpassage(item.content)}}</p>
           <div class="meta">
-            <a href="/#">
+            <a @click="pushRoute(item.id)">
               <svg
                 t="1591034383019"
                 class="icon"
@@ -33,12 +57,12 @@
                 <path
                   d="M646.4 272c-59.2 0-108.8 33.6-134.4 81.6-25.6-48-76.8-81.6-134.4-81.6-84.8 0-153.6 68.8-153.6 155.2 0 25.6 6.4 51.2 17.6 72 1.6 3.2 6.4 9.6 12.8 19.2 4.8 6.4 9.6 12.8 16 17.6 44.8 51.2 132.8 139.2 190.4 193.6 28.8 27.2 76.8 27.2 105.6 0 57.6-56 145.6-144 190.4-193.6 4.8-4.8 11.2-11.2 16-17.6 4.8-6.4 9.6-14.4 12.8-19.2 11.2-22.4 17.6-48 17.6-72-3.2-86.4-72-155.2-156.8-155.2z"
                   p-id="1748"
-                  :fill="isLike ? '#646464' : '#ea6f5a'"
+                  :fill="item.isLike ? '#ea6f5a' : '#646464'"
                 />
               </svg>
               {{item.likeCount}}
             </a>
-            <a href="/#">
+            <a @click="pushRoute(item.id)">
               <svg
                 t="1569135820525"
                 class="icon"
@@ -57,12 +81,16 @@
               </svg>
               {{item.looked}}
             </a>
-            <span>
+            <span @click="pushRoute(item.id)">
               <i class="el-icon-chat-dot-round"></i> 0
             </span>
           </div>
         </div>
       </li>
+      <p v-if="!last" class="last" style="text-align: center; color:#b4b4b4; font-size:20px">
+        <i class="el-icon-loading"></i>
+      </p>
+      <p v-else class="last" style="text-align: center; color:#b4b4b4">没有更多了啦...</p>
     </ul>
   </div>
 </template>
@@ -71,7 +99,8 @@ import API from "@/service/api";
 import { mapGetters } from "vuex";
 import { types } from "./info";
 export default {
-  name: "itemCard",
+  inject: ["reload"],
+  name: "itemCard" + this.type,
   props: {
     item: {
       author: Object
@@ -83,14 +112,14 @@ export default {
   created() {},
   computed: {
     ...mapGetters(["userName", "userId", "userHead"]),
-    isLike(data){
-      return Boolean(data)
+    isLike(data) {
+      return Boolean(data);
     }
   },
   data() {
     return {
       count: 10,
-      type:"",
+      type: "",
       info: {
         board: "ARTICLE",
         id: "",
@@ -98,32 +127,70 @@ export default {
         per_page: 10
       },
       content: [],
-      totalPages:0
+      totalElements: 0,
+      timeout: false,
+      loading: true,
+      last: false
     };
   },
   mounted() {
-    this.type=this.$route.params.type;
+    this.type = this.$route.params.type;
     this.getContent(this.$route.params.type);
   },
   methods: {
+    listenScroll(event) {
+      var Loading = this.load;
+      if (
+        !this.timeout &&
+        event.srcElement.scrollTop - (this.totalElements - 3) * 140 > 0
+      ) {
+        this.timeout = setTimeout(function() {
+          Loading();
+        }, 300);
+      }
+    },
     getPath() {
-      this.type=this.$route.params.type,
-      console.log(this.$route.params.type);
+      this.type = this.$route.params.type;
+      this.reload();
     },
     getContent(type) {
-      var params = this.info;
-      params.type = types[type];
-      params.id = this.userId || "";
-      API.getBoard(params).then(res => {
-       this.content =  this.content.concat(res.content);
-        this.totalPages = res.totalPages
-      });
+      var params = {};
+      this.loading = true;
+      if (type == "all") {
+        params = this.info;
+        params.id = this.userId || "";
+        params.type = types[type];
+        API.getBoard(params).then(res => {
+          this.content = this.content.concat(res.content);
+          this.totalElements = res.totalElements;
+          this.timeout = null;
+          this.loading = false;
+          if (this.totalElements < 10) {
+            this.last = true;
+          }
+        });
+      } else {
+        params = this.info;
+        params.id = this.userId || "";
+        params.classification = types[type];
+        API.classification(params).then(res => {
+          console.log(res);
+          this.content = this.content.concat(res.content);
+          this.totalElements = res.totalElements;
+          this.timeout = null;
+          this.loading = false;
+          if (this.totalElements < 10) {
+            this.last = true;
+          }
+        });
+      }
     },
-    load(){
-      console.log('loader',this.content)
-      if(this.info.page < 4){
-        this.info.page++
-        this.getContent(this.type)
+    load() {
+      if (this.info.page * 10 <= this.totalElements) {
+        this.info.page++;
+        this.getContent(this.type);
+      } else {
+        this.last = true;
       }
     },
     regpassage(data) {
@@ -134,6 +201,10 @@ export default {
           ""
         )
         .concat("...");
+    },
+    pushRoute(url){
+      this.$router.push('/postDetail/'+url);
+
     }
   }
 };
@@ -143,8 +214,14 @@ ul {
   margin: 0;
   padding: 0;
   list-style: none;
+  padding: 0 5% 0 0;
+  margin-left: 5%;
+  position: absolute;
+  top: 109px;
+  bottom: 0px;
+  flex: 1;
+  overflow: auto;
   width: 80%;
-  padding-left: 5%;
 }
 li {
   -webkit-tap-highlight-color: transparent;
@@ -292,5 +369,57 @@ li {
       }
     }
   }
+}
+
+.headbox {
+  padding: 0 40px;
+  background: #fff;
+  height: 200px;
+  width: 94%;
+  min-width: 1040px;
+  border-radius: 5px;
+  margin: 0 auto;
+}
+.main-top {
+  margin-top: 20px;
+}
+.avatar {
+  float: left;
+  width: 90px;
+  height: 90px;
+  margin-left: -10px;
+  margin-top: 10px;
+  display: block;
+  cursor: pointer;
+}
+.title {
+  .name {
+    display: inline;
+    font-size: 21px;
+    font-weight: 700;
+    vertical-align: middle;
+    cursor: pointer;
+  }
+}
+
+.wordList {
+  margin-left: 2.5%;
+  width: 95%;
+  min-width: 606.13px;
+}
+.wordList div {
+  color: #555;
+  margin-top: 5px;
+}
+div.router-link-active,
+div.router-link-active path {
+  color: #ea6f5a;
+  fill: #ea6f5a;
+  border-bottom: 3px solid #ea6f5a;
+  border-radius: 3px;
+}
+
+.userCenter {
+  position: relative;
 }
 </style>
