@@ -206,6 +206,22 @@ export default {
   computed: {
     ...mapGetters(["userName", "userId", "userHead"])
   },
+  beforeRouteEnter(to, from, next) {
+    let cookie = document.cookie.split(";");
+    var res = {};
+    cookie.forEach(item => {
+      var result = item.split("=");
+      if (result[0] && result[1]) {
+        res[result[0].trim()] = result[1].trim();
+      }
+    });
+    console.log(res.userId);
+    if (res.userId) {
+      next();
+    } else {
+      next({ path: "/users/login" });
+    }
+  },
   methods: {
     // 绑定@imgAdd event
     $imgAdd(pos, $file) {

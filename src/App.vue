@@ -102,7 +102,7 @@
                       style="text-align: right; font-size: 12px"
                       placement="bottom-start"
                     >
-                      <router-link tag="div" to="/users">
+                      <router-link style="outline: none;" tag="div" to="/users">
                         <img class="userHead" v-if="userHead" :src="userHead" alt="用户头像" />
                         <img v-else class="svg" src="./assets/images/login.svg" />
                       </router-link>

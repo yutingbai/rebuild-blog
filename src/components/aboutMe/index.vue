@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ListBox">
     <div class="wordList">
       <el-row>
         <el-col :span="3">
@@ -94,12 +94,7 @@
       </el-row>
     </div>
     <div v-if="content.toString()!='' && content[0].board" class="content">
-      <ul
-        class="cardList infinite-list"
-        overflow="scroll"
-        @scroll="listenScroll($event)"
-        v-loading="loading"
-      >
+      <ul class="cardList infinite-list" overflow="scroll" @scroll="listenScroll($event)">
         <!-- v-infinite-scroll="load" :infinite-scroll-delay="1000" -->
         <li v-for="item  in content" :key="item.id" class="card infinite-list-item">
           <div class="content">
@@ -167,39 +162,11 @@
             </div>
           </div>
         </li>
-        <p v-if="!last" class="last" style="text-align: center; color:#b4b4b4; font-size:20px">
-          <i class="el-icon-loading"></i>
-        </p>
+        <li v-if="last" class="last" style="text-align: center; color:#b4b4b4">没有更多了啦...</li>
       </ul>
-      <p
-        v-if="content.toString() == '' && !this.loading "
-        style="text-align: center; color:#b4b4b4 ;font-size:50px"
-      >
-        <svg
-          t="1591069880712"
-          class="icon"
-          viewBox="0 0 1024 1024"
-          version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
-          p-id="2270"
-          width="200"
-          height="200"
-        >
-          <path
-            d="M880.128 426.752a98.816 98.816 0 0 0-68.608-33.792H214.528a111.36 111.36 0 0 0-70.912 32.512c-18.944 18.944-128 195.072-128 232.192v236.8a66.816 66.816 0 0 0 20.224 47.36 68.352 68.352 0 0 0 48.384 19.456h856.32a68.352 68.352 0 0 0 48.384-19.456 66.816 66.816 0 0 0 20.224-47.36v-236.8c0-37.12-129.024-230.912-129.024-230.912zM659.2 636.672a32 32 0 0 0-32.768 23.04v4.864a111.872 111.872 0 0 1-223.488 0 39.68 39.68 0 0 1 0-6.4 35.328 35.328 0 0 0-31.744-21.76H89.6l96-162.304s19.2-31.488 37.376-31.232h597.76a80.64 80.64 0 0 1 32.256 30.976L947.2 636.672zM478.976 87.04h62.208V332.8h-62.208V87.04zM673.497 296.745l111.002-137.076 48.344 39.149-111.002 137.076-48.344-39.149zM191.288 198.776l48.344-39.149 111.002 137.076-48.344 39.15-111.002-137.077z"
-            fill="#646464"
-            p-id="2271"
-          />
-        </svg>
-      </p>
     </div>
     <div v-if="content.toString()!='' && content[0].type" class="content">
-      <ul
-        class="cardList infinite-list"
-        overflow="scroll"
-        @scroll="listenScroll($event)"
-        v-loading="loading"
-      >
+      <ul class="cardList infinite-list" overflow="scroll" @scroll="listenScroll($event)">
         <!-- v-infinite-scroll="load" :infinite-scroll-delay="1000" -->
         <li v-for="item  in content" :key="item.id" class="card infinite-list-item">
           <div class="content">
@@ -208,7 +175,7 @@
                 <img :src="item.userVO.avatarUrl" alt="180" />
               </a>
               <div class="info">
-                <a class="nickname" >{{item.userVO.nickname}}</a>
+                <a class="nickname">{{item.userVO.nickname}}</a>
                 <span
                   data-type="share_note"
                   data-datetime="2017-12-18T10:27:40+08:00"
@@ -223,11 +190,8 @@
               </div>
             </div>
 
-            <a class="title" ></a>
-            <p
-              style="cursor: pointer;"
-              class="abstract"
-            >对你发布的「{{item.summary}}」，他好像有话要说</p>
+            <a class="title"></a>
+            <p style="cursor: pointer;" class="abstract">对你发布的「{{item.summary}}」，他好像有话要说</p>
             <div class="meta">
               <span @click="viewMore(item.id)">
                 <i class="el-icon-chat-dot-round"></i> 点击查看详情
@@ -235,37 +199,40 @@
             </div>
           </div>
         </li>
-        <p v-if="!last" class="last" style="text-align: center; color:#b4b4b4; font-size:20px">
-          <i class="el-icon-loading"></i>
-        </p>
+        <li v-if="last" class="last" style="text-align: center; color:#b4b4b4">没有更多了啦...</li>
       </ul>
-      <p
-        v-if="content.toString() == '' && !this.loading "
-        style="text-align: center; color:#b4b4b4 ;font-size:50px"
-      >
-        <svg
-          t="1591069880712"
-          class="icon"
-          viewBox="0 0 1024 1024"
-          version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
-          p-id="2270"
-          width="200"
-          height="200"
-        >
-          <path
-            d="M880.128 426.752a98.816 98.816 0 0 0-68.608-33.792H214.528a111.36 111.36 0 0 0-70.912 32.512c-18.944 18.944-128 195.072-128 232.192v236.8a66.816 66.816 0 0 0 20.224 47.36 68.352 68.352 0 0 0 48.384 19.456h856.32a68.352 68.352 0 0 0 48.384-19.456 66.816 66.816 0 0 0 20.224-47.36v-236.8c0-37.12-129.024-230.912-129.024-230.912zM659.2 636.672a32 32 0 0 0-32.768 23.04v4.864a111.872 111.872 0 0 1-223.488 0 39.68 39.68 0 0 1 0-6.4 35.328 35.328 0 0 0-31.744-21.76H89.6l96-162.304s19.2-31.488 37.376-31.232h597.76a80.64 80.64 0 0 1 32.256 30.976L947.2 636.672zM478.976 87.04h62.208V332.8h-62.208V87.04zM673.497 296.745l111.002-137.076 48.344 39.149-111.002 137.076-48.344-39.149zM191.288 198.776l48.344-39.149 111.002 137.076-48.344 39.15-111.002-137.077z"
-            fill="#646464"
-            p-id="2271"
-          />
-        </svg>
-      </p>
     </div>
+
+    <p v-if="loading" class="last" style="text-align: center; color:#b4b4b4; font-size:20px">
+      <i class="el-icon-loading"></i>
+    </p>
+    <p
+      v-if="content.toString() == '' && !this.loading "
+      style="text-align: center; color:#b4b4b4 ;font-size:50px"
+    >
+      <svg
+        t="1591069880712"
+        class="icon"
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        p-id="2270"
+        width="200"
+        height="200"
+      >
+        <path
+          d="M880.128 426.752a98.816 98.816 0 0 0-68.608-33.792H214.528a111.36 111.36 0 0 0-70.912 32.512c-18.944 18.944-128 195.072-128 232.192v236.8a66.816 66.816 0 0 0 20.224 47.36 68.352 68.352 0 0 0 48.384 19.456h856.32a68.352 68.352 0 0 0 48.384-19.456 66.816 66.816 0 0 0 20.224-47.36v-236.8c0-37.12-129.024-230.912-129.024-230.912zM659.2 636.672a32 32 0 0 0-32.768 23.04v4.864a111.872 111.872 0 0 1-223.488 0 39.68 39.68 0 0 1 0-6.4 35.328 35.328 0 0 0-31.744-21.76H89.6l96-162.304s19.2-31.488 37.376-31.232h597.76a80.64 80.64 0 0 1 32.256 30.976L947.2 636.672zM478.976 87.04h62.208V332.8h-62.208V87.04zM673.497 296.745l111.002-137.076 48.344 39.149-111.002 137.076-48.344-39.149zM191.288 198.776l48.344-39.149 111.002 137.076-48.344 39.15-111.002-137.077z"
+          fill="#646464"
+          p-id="2271"
+        />
+      </svg>
+    </p>
     <el-dialog
       class="dialog"
       :title="`来自的${message.userVO.nickname}消息`"
       :visible.sync="dialogVisible"
       width="30%"
+      :before-close="handleClose"
     >
       <div class="author" style="cursor: pointer;">
         <a class="avatar">
@@ -328,7 +295,7 @@ export default {
       aboutMeCount: [],
       totalElements: 0,
       timeout: false,
-      loading: false,
+      loading: true,
       last: false,
       dialogVisible: false,
       message: {
@@ -365,6 +332,7 @@ export default {
     getContent(type) {
       var params = this.info;
       this.loading = true;
+      console.log(this.loading);
       params.id = this.userId || "";
       if (type == "post/myquestion") {
         API.notification(params).then(res => {
@@ -372,6 +340,7 @@ export default {
           this.totalElements = res.data.totalElements;
           this.timeout = null;
           this.loading = false;
+          console.log(this.loading);
           if (this.totalElements < 10) {
             this.last = true;
           }
@@ -382,6 +351,7 @@ export default {
           this.totalElements = res.totalElements;
           this.timeout = null;
           this.loading = false;
+          console.log(this.loading);
           if (this.totalElements < 10) {
             this.last = true;
           }
@@ -421,11 +391,13 @@ export default {
       return Y + M + D + h + m + s;
     },
     viewMore(id) {
-      
       API.notificationDetail(id).then(res => {
         this.message = res;
         this.dialogVisible = true;
       });
+    },
+    handleClose() {
+      this.userPagereload();
     }
   }
 };
@@ -438,7 +410,7 @@ ul {
   padding: 0 5% 0 0;
   margin-left: 5%;
   position: absolute;
-  top: 30px;
+  top: 35px;
   bottom: 0px;
   flex: 1;
   overflow: auto;
@@ -624,20 +596,20 @@ li {
 }
 
 .wordList {
-  margin-left: 2.5%;
   width: 95%;
   min-width: 606.13px;
+  text-align: center;
 }
 .wordList div {
   color: #969696;
-  margin-top: 2px;
+  margin-top: 5px;
 }
 div.router-link-active,
 div.router-link-active path {
   color: #ea6f5a;
   fill: #ea6f5a;
   border-bottom: 3px solid #ea6f5a;
-  margin-right: 30px;
+  margin: 0 12%;
   border-radius: 3px;
 }
 #content {
@@ -693,9 +665,12 @@ div.router-link-active path {
   }
 }
 .red {
-  color: #F56C6C;
+  color: #f56c6c;
 }
 .green {
-  color: #67C23A;
+  color: #67c23a;
+}
+.ListBox {
+  height: 98%;
 }
 </style>
