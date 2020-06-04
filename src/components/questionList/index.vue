@@ -28,7 +28,7 @@
               <span
                 data-type="share_note"
                 data-datetime="2017-12-18T10:27:40+08:00"
-              >{{new Date(item.lastActiveAt).toLocaleString()}}</span>
+              >{{timestampToTime(item.lastActiveAt)}}</span>
             </div>
           </div>
 
@@ -133,6 +133,19 @@ export default {
     this.getContent(this.$route.params.type);
   },
   methods: {
+    timestampToTime(timestamp) {
+      var date = new Date(new Date(timestamp).valueOf() + 13 * 60 * 60 * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var Y = date.getFullYear() + "-";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "-";
+      var D = date.getDate() + " ";
+      var h = date.getHours() + ":";
+      var m = date.getMinutes() + ":";
+      var s = date.getSeconds();
+      return Y + M + D + h + m + s;
+    },
     pushRoute(url){
       this.$router.push('/postDetail/'+url);
 
