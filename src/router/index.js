@@ -139,8 +139,15 @@ const router = new Router({
       name: '/postDetail',
       component: postDetile,
     },
-
-  ]
+    {
+      path: "/404",
+      name: "notFound",
+      component: () => import('@/components/notFound')
+    },
+    {
+      path: "*", // 此处需特别注意置于最底部
+      redirect: "/404" //无匹配到的路径自动重定向到404页面
+    }]
 })
 
 

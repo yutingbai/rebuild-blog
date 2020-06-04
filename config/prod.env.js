@@ -1,5 +1,5 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"production"',
-  API_HOST:"http://yugengkai.top:8080"
+  API_HOST:"http://yugengkai.top:8080/xuptbbs"
 }
